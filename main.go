@@ -14,6 +14,7 @@ func main() {
 	delay := flag.Int("delay", 0, "delay for each request in seconds")
 	errors := flag.Bool("errors", false, "inject 500 errors in requests")
 	port := flag.Int("port", 20000, "port to listen")
+	verbose := flag.Bool("v", false, "log every request")
 	flag.Parse()
 
 	rand.Seed(time.Now().UnixNano())
@@ -25,6 +26,10 @@ func main() {
 			}
 		}
 		time.Sleep(time.Second * time.Duration(*delay))
+		if *verbose {
+			log.Printf("addr=%s host=%s uri=\"%s\"\n",
+				r.RemoteAddr, r.Host, r.RequestURI)
+		}
 		fmt.Fprintln(w, "Hello")
 	})
 
